@@ -8,32 +8,98 @@
 </head>
 <body>
     <div class="container">
-        <h1>ML модель для улучшения изображений</h1>
-        <h2>Лысак Владислав Игоревич</h2>
-        <h2>Ульяновский Государственный Технический университет УлГТУ</h2>
+        <div class="header-section">
+            <h1>ML модель для улучшения изображений</h1>
+            <h2>Лысак Владислав Игоревич</h2>
+            <h2>Ульяновский государственный технический университет УЛГТУ</h2>
+        </div>
         
-        <div class="upload-section">
-            <h3>Загрузи свое изображение</h3>
-            <div class="upload-area" id="uploadArea">
-                <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="17 8 12 3 7 8"></polyline>
-                    <line x1="12" y1="3" x2="12" y2="15"></line>
-                </svg>
-                <p class="upload-text">Перетащи изображение сюда</p>
-                <button class="btn-select" id="selectBtn">Выбрать изображение</button>
-                <input type="file" id="fileInput" accept="image/*" class="file-input">
-            </div>
-            
-            <div class="preview-section" id="previewSection" style="display: none;">
-                <div class="preview-container">
-                    <img id="previewImage" class="preview-image" alt="Предпросмотр">
-                    <div class="image-info">
-                        <p id="fileName"></p>
-                        <p id="fileSize"></p>
+        <div class="main-layout">
+            <!-- Левая колонка: загрузка и информация -->
+            <div class="left-panel" id="uploadSection">
+                <div class="upload-section">
+                    <h3>Загрузка изображения</h3>
+                    <div class="upload-area" id="uploadArea">
+                        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <p class="upload-text">Выберите изображение, которое хотите улучшить.</p>
+                        <button class="btn-select" id="selectBtn">Выбрать изображение</button>
+                        <input type="file" id="fileInput" accept="image/*" class="file-input">
                     </div>
                 </div>
-                <button class="btn-clear" id="clearBtn">Очистить</button>
+                
+                <div class="tasks-section" id="tasksSection">
+                    <h3>Задачи</h3>
+                    <div class="task-item" id="taskInfo">
+                        <div class="task-filename" id="taskFilename">Нет файла</div>
+                        <div class="task-meta">
+                            <span class="task-size" id="taskSize">— KB</span>
+                        </div>
+                        <div class="task-status">
+                            <span class="status-label">Статус: <span id="taskStatus">ожидание</span></span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="taskProgress" style="width: 0%"></div>
+                        </div>
+                        <div class="task-hash" id="taskHash">—</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Правая колонка: результат -->
+            <div class="right-panel" id="previewBeforeAfter">
+                <h3>Предпросмотр</h3>
+                <div class="preview-grid">
+                    <div class="preview-item">
+                        <h4>Исходное</h4>
+                        <div class="preview-box">
+                            <img id="originalImage" class="preview-image" alt="Исходное изображение">
+                        </div>
+                    </div>
+                    <div class="preview-item">
+                        <h4>Результат</h4>
+                        <div class="preview-box">
+                            <img id="resultImage" class="preview-image" alt="Результат обработки">
+                        </div>
+                    </div>
+                </div>
+                <div class="preview-controls">
+                    <button class="btn-download" id="downloadBtn">Скачать результат</button>
+                    <button class="btn-clear" id="clearBtn">Очистить</button>
+                </div>
+                <div class="processing-info" id="processingInfo">
+                    <div class="info-row">
+                        <span class="info-label">Статус:</span>
+                        <span id="statusValue" class="info-value">—</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Яркость:</span>
+                        <span id="brightnessValue" class="info-value">—</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Контраст:</span>
+                        <span id="contrastValue" class="info-value">—</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Насыщенность:</span>
+                        <span id="saturationValue" class="info-value">—</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Время обработки:</span>
+                        <span id="timeValue" class="info-value">—</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Прогресс:</span>
+                        <span id="progressValue" class="info-value">—</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Размер:</span>
+                        <span id="sizeValue" class="info-value">—</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

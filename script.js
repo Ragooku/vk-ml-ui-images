@@ -1,12 +1,21 @@
 // Элементы управления
+const uploadSection = document.getElementById('uploadSection');
 const uploadArea = document.getElementById('uploadArea');
 const fileInput = document.getElementById('fileInput');
 const selectBtn = document.getElementById('selectBtn');
-const previewSection = document.getElementById('previewSection');
-const previewImage = document.getElementById('previewImage');
-const fileNameElement = document.getElementById('fileName');
-const fileSizeElement = document.getElementById('fileSize');
+const previewBeforeAfter = document.getElementById('previewBeforeAfter');
+const originalImage = document.getElementById('originalImage');
+const resultImage = document.getElementById('resultImage');
 const clearBtn = document.getElementById('clearBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+
+// Элементы информации о задачах
+const tasksSection = document.getElementById('tasksSection');
+const taskFilename = document.getElementById('taskFilename');
+const taskSize = document.getElementById('taskSize');
+const taskStatus = document.getElementById('taskStatus');
+const taskProgress = document.getElementById('taskProgress');
+const taskHash = document.getElementById('taskHash');
 
 // Открытие диалога выбора файла при клике на кнопку
 selectBtn.addEventListener('click', () => {
@@ -57,15 +66,20 @@ function handleFileSelect() {
         const reader = new FileReader();
         
         reader.onload = (e) => {
-            previewImage.src = e.target.result;
+            const imageData = e.target.result;
+            originalImage.src = imageData;
+            resultImage.src = imageData;
             
-            // Показываем секцию с превью
-            previewSection.style.display = 'block';
+            // Обновляем информацию о задаче
+            updateTaskInfo(file);
+            
+            // Показываем результат "до и после"
+            previewBeforeAfter.classList.add('visible');
             
             // Добавляем анимацию появления
-            previewSection.style.animation = 'none';
+            previewBeforeAfter.style.animation = 'none';
             setTimeout(() => {
-                previewSection.style.animation = 'fadeIn 0.5s ease';
+                previewBeforeAfter.style.animation = 'slideIn 0.4s ease';
             }, 10);
         };
         
@@ -74,6 +88,25 @@ function handleFileSelect() {
         alert('Пожалуйста, выберите изображение');
         fileInput.value = '';
     }
+}
+
+// Функция обновления информации о задаче
+function updateTaskInfo(file) {
+    // Обновляем имя файла
+    taskFilename.textContent = file.name;
+    
+    // Обновляем размер файла
+    const sizeKB = (file.size / 1024).toFixed(2);
+    taskSize.textContent = sizeKB + ' KB';
+    
+    // Обновляем статус
+    taskStatus.textContent = 'done';
+    
+    // Генерируем хэш (упрощенный вариант)
+    generateFileHash(file);
+    
+    // Симулируем прогресс
+    updateProgress(100);
 }
 
 // Функция форматирования размера файла
@@ -85,9 +118,45 @@ function formatFileSize(bytes) {
     return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
 }
 
+// Функция генерации хэша файла
+function generateFileHash(file) {
+    // Упрощенный вариант хэша (в реальном приложении используйте криптографию)
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const arr = new Uint8Array(e.target.result).subarray(0, 256);
+        let hash = '';
+        for (let i = 0; i < arr.length; i++) {
+            hash += ('00' + arr[i].toString(16)).slice(-2);
+        }
+        taskHash.textContent = hash.substring(0, 12);
+    };
+    reader.readAsArrayBuffer(file.slice(0, 1024));
+}
+
+// Функция обновления прогресса
+function updateProgress(value) {
+    taskProgress.style.width = value + '%';
+}
+
 // Кнопка очистки
 clearBtn.addEventListener('click', () => {
-    previewImage.src = '';
+    originalImage.src = '';
+    resultImage.src = '';
     fileInput.value = '';
-    previewSection.style.display = 'none';
+    previewBeforeAfter.classList.remove('visible');
+    
+    // Сбрасываем информацию о задаче
+    taskFilename.textContent = 'Нет файла';
+    taskSize.textContent = '— KB';
+    taskStatus.textContent = 'ожидание';
+    taskHash.textContent = '—';
+    taskProgress.style.width = '0%';
+});
+
+// Кнопка скачивания результата
+downloadBtn.addEventListener('click', () => {
+    const link = document.createElement('a');
+    link.href = resultImage.src;
+    link.download = 'result.png';
+    link.click();
 });
